@@ -17,7 +17,7 @@ function Register() {
         }
         try {
             const response = await axios.post('http://localhost:3090/auth/register', formData)
-            navigate('/login')
+            navigate('/login', { state: { message: response.data.message}})
         } catch(e) {
             setServerErrors(e.response.data.errors)
         }
