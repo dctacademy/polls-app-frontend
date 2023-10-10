@@ -1,28 +1,51 @@
-import { BrowserRouter, Routes, Route, Link} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import _ from 'lodash'
 import Home from './components/Home'
 import Register from './components/Register'
 import Login from './components/Login'
+import Dashboard from './components/Dashboard'
+import userReducer from './reducers/user-reducer'
+import { useReducer, createContext } from 'react'
 
-function App(){ 
+
+export const UserContext = createContext()
+
+export function App(){ 
+    const [state, dispatch] = useReducer(userReducer, { user: {}})
+    const handleLogout = () => {
+        localStorage.removeItem('token')
+        dispatch({ type: 'LOGOUT_USER'})
+    }
     return (
         <BrowserRouter>
-            <div>
-                <h1>Polling App</h1>
-                <nav>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/register">Register</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                </nav>
+            <UserContext.Provider value={{state, dispatch }}>
+                <div>
+                    <h1>Polling App</h1>
+                    <nav>
+                        <li><Link to="/">Home</Link></li>
+                        { _.isEmpty(state.user) ? (
+                            <>
+                                <li><Link to="/register">Register</Link></li>
+                                <li><Link to="/login">Login</Link></li>
+                            </>
+                        ) : (
+                            <>
+                                <li><Link to="/dashboard">dashboard</Link></li>
+                                <li><Link to="#" onClick={handleLogout}>logout</Link></li>
+                            </>
+                        )}
+                        
+                    </nav>
 
 
-                <Routes>
-                    <Route path="/" element={<Home />}/> 
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                </Routes>
-            </div>
+                    <Routes>
+                        <Route path="/" element={<Home />}/> 
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path='/dashboard' element={<Dashboard />} />
+                    </Routes>
+                </div>
+            </UserContext.Provider>
         </BrowserRouter>
     )
 }
-
-export default App 
