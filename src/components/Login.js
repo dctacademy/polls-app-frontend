@@ -19,7 +19,13 @@ function Login() {
         try {
             const response = await axios.post('http://localhost:3090/auth/login', formData) 
             localStorage.setItem('token', response.data.token)
-            navigate('/')
+            const accountResponse = await axios.get('http://localhost:3090/api/users/account', {
+                headers: {
+                    'Authorization' : localStorage.getItem('token')
+                }
+            })
+            console.log(accountResponse.data)
+            navigate('/dashboard')
         } catch(e) {
             setServerErrors(e.response.data.errors)
         }
