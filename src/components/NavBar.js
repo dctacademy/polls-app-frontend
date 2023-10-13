@@ -21,6 +21,7 @@ function NavBar() {
             ) : (
                 <>
                     <li><Link to="/dashboard">dashboard</Link></li>
+                    <li><Link to="/polls/new" >Create Poll</Link></li>
                     <li><Link to="/" onClick={handleLogout}>logout</Link></li>
                 </>
             )}

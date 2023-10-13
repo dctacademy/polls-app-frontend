@@ -5,8 +5,10 @@ import Register from './components/Register'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
+import NewPoll from './components/NewPoll'
 import userReducer from './reducers/user-reducer'
 import { useReducer, createContext, useEffect } from 'react'
+
 export const UserContext = createContext()
 
 export function App(){ 
@@ -42,9 +44,15 @@ export function App(){
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
                         <Route path='/dashboard' element={<Dashboard />} />
+                        <Route path="/polls/new" element={<NewPoll />} />
                     </Routes>
                 </div>
             </UserContext.Provider>
         </BrowserRouter>
     )
 }
+
+
+/*
+    poor | below average | average | above average | expentional 
+*/
