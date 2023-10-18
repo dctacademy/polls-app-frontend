@@ -10,6 +10,9 @@ const userReducer = (state, action) => {
         case 'SET_MY_POLLS' : {
             return {...state, myPolls: action.payload }
         }
+        case 'ADD_MY_POLL' : {
+            return {...state, myPolls: [...state.myPolls, action.payload]}
+        }
         default: {
             return {...state}
         }

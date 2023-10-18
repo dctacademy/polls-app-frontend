@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard'
 import NavBar from './components/NavBar'
 import NewPoll from './components/NewPoll'
 import MyPolls from './components/MyPolls'
+import PollShow from'./components/PollShow'
 import userReducer from './reducers/user-reducer'
 import { useReducer, createContext, useEffect } from 'react'
 
@@ -54,6 +55,7 @@ export function App(){
                         <Route path='/dashboard' element={<Dashboard />} />
                         <Route path="/polls/new" element={<NewPoll />} />
                         <Route path='/polls/my-polls' element={<MyPolls />} />
+                        <Route path="/mypolls/:id" element={<PollShow />}/>
                     </Routes>
                 </div>
             </UserContext.Provider>

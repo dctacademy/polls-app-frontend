@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react' 
+import { useNavigate } from 'react-router-dom'
+import {UserContext} from '../App'
 import axios from 'axios'
 function NewPoll() {
+    const navigate = useNavigate() 
     const [question, setQuestion] = useState('')
     const [categories, setCategories] = useState([])
     const [categoryId, setCategoryId] = useState('')
     const [categoryName, setCategoryName] = useState('') 
     const [endDate, setEndDate] = useState('')
     const [options, setOptions] = useState([])
+    
+    const { dispatch } = useContext(UserContext) 
 
     useEffect(() => {
         (async() => {
@@ -83,11 +88,14 @@ function NewPoll() {
                     'Authorization' : localStorage.getItem('token')
                 }
             })
-            console.log(response.data) 
+            const poll = response.data
+            dispatch({ type: 'ADD_MY_POLL', payload: poll })
             setQuestion('')
             setEndDate('')
             setCategoryId('')
             setOptions([]) 
+
+            navigate(`/mypolls/${poll._id}`)
         } catch(e) {
             alert(e.message) 
         }
