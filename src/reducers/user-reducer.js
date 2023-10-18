@@ -5,7 +5,10 @@ const userReducer = (state, action) => {
             return {...state, user: action.payload }
         }
         case 'LOGOUT_USER' : {
-            return { ...state, user: {}}
+            return { ...state, user: {}, myPolls: []}
+        }
+        case 'SET_MY_POLLS' : {
+            return {...state, myPolls: action.payload }
         }
         default: {
             return {...state}

@@ -8,6 +8,7 @@ function NavBar() {
     const handleLogout = () => {
         localStorage.removeItem('token')
         dispatch({ type: 'LOGOUT_USER' })
+        // dispatch({ type: 'CLEAR_MY_POLLS'})
     }
     
     return (
@@ -22,6 +23,7 @@ function NavBar() {
                 <>
                     <li><Link to="/dashboard">dashboard</Link></li>
                     <li><Link to="/polls/new" >Create Poll</Link></li>
+                    <li><Link to="/polls/my-polls">My Polls</Link></li>
                     <li><Link to="/" onClick={handleLogout}>logout</Link></li>
                 </>
             )}
