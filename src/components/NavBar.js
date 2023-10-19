@@ -3,18 +3,18 @@ import _ from 'lodash'
 import { useContext } from 'react' 
 import { UserContext } from '../App'
 function NavBar() {
-    const { state, dispatch } = useContext(UserContext) 
+    const { userState, userDispatch } = useContext(UserContext) 
 
     const handleLogout = () => {
         localStorage.removeItem('token')
-        dispatch({ type: 'LOGOUT_USER' })
-        // dispatch({ type: 'CLEAR_MY_POLLS'})
+        userDispatch({ type: 'LOGOUT_USER' })
+        // userDispatch({ type: 'CLEAR_MY_POLLS'})
     }
     
     return (
         <nav>
             <li><Link to="/">Home</Link></li>
-            {_.isEmpty(state.user) ? (
+            {_.isEmpty(userState.user) ? (
                 <>
                     <li><Link to="/register">Register</Link></li>
                     <li><Link to="/login">Login</Link></li>

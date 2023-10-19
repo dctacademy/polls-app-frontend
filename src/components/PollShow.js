@@ -3,8 +3,8 @@ import { useContext } from 'react'
 import { UserContext } from '../App'
 function PollShow() {
     const { id } = useParams()
-    const { state } = useContext(UserContext)
-    const poll = state.myPolls.find((ele) => {
+    const { userState } = useContext(UserContext)
+    const poll = userState.myPolls.find((ele) => {
         return ele._id === id
     })
     return (

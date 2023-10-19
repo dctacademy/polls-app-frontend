@@ -16,7 +16,7 @@ export const UserContext = createContext()
 export const PollsContext = createContext()
 
 export function App(){ 
-    const [state, dispatch] = useReducer(userReducer, { user: {}, myPolls: []})
+    const [userState, userDispatch] = useReducer(userReducer, { user: {}, myPolls: []})
     const [pollsState, pollsDispatch] = useReducer(pollsReducer, { activePolls: []})
 
     useEffect(() => {
@@ -28,14 +28,14 @@ export function App(){
                             'Authorization' : localStorage.getItem('token')
                         }
                     })
-                    dispatch({ type: 'USER_LOGIN', payload: response.data })
+                    userDispatch({ type: 'USER_LOGIN', payload: response.data })
 
                     const pollsResponse = await axios.get('/api/polls/mypolls', {
                         headers: {
                             'Authorization' : localStorage.getItem('token')
                         }
                     })
-                    dispatch({ type: 'SET_MY_POLLS', payload: pollsResponse.data})
+                    userDispatch({ type: 'SET_MY_POLLS', payload: pollsResponse.data})
                 } catch(e){
                     alert(e.message)
                 }
@@ -56,7 +56,7 @@ export function App(){
     
     return (
         <BrowserRouter>
-            <UserContext.Provider value={{state, dispatch }}>
+            <UserContext.Provider value={{userState, userDispatch }}>
                 <PollsContext.Provider value={{ pollsState, pollsDispatch}}>
                     <div>
                         <h1>Polling App</h1>

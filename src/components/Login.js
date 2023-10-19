@@ -3,7 +3,7 @@ import axios from '../config/axios'
 import { UserContext } from '../App'
 import { useState, useContext } from 'react'
 function Login() {
-    const {dispatch} = useContext(UserContext)
+    const {userDispatch} = useContext(UserContext)
     const location = useLocation() 
     const navigate = useNavigate()
     // const message = location.state ? location.state.message : ''
@@ -28,14 +28,14 @@ function Login() {
                 }
             })
             const user = accountResponse.data 
-            dispatch({ type: 'USER_LOGIN', payload: user })
+            userDispatch({ type: 'USER_LOGIN', payload: user })
 
             const pollsResponse = await axios.get('/api/polls/mypolls', {
                 headers: {
                     'Authorization': localStorage.getItem('token')
                 }
             })
-            dispatch({ type: 'SET_MY_POLLS', payload: pollsResponse.data })
+            userDispatch({ type: 'SET_MY_POLLS', payload: pollsResponse.data })
             navigate('/dashboard')
         } catch(e) {
             setServerErrors(e.response.data.errors)

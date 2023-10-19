@@ -11,7 +11,7 @@ function NewPoll() {
     const [endDate, setEndDate] = useState('')
     const [options, setOptions] = useState([])
     
-    const { dispatch } = useContext(UserContext) 
+    const { userDispatch } = useContext(UserContext) 
 
     useEffect(() => {
         (async() => {
@@ -89,7 +89,7 @@ function NewPoll() {
                 }
             })
             const poll = response.data
-            dispatch({ type: 'ADD_MY_POLL', payload: poll })
+            userDispatch({ type: 'ADD_MY_POLL', payload: poll })
             setQuestion('')
             setEndDate('')
             setCategoryId('')
