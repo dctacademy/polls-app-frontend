@@ -9,13 +9,15 @@ import NewPoll from './components/NewPoll'
 import MyPolls from './components/MyPolls'
 import PollShow from'./components/PollShow'
 import userReducer from './reducers/user-reducer'
+import pollsReducer from './reducers/polls-reducer'
 import { useReducer, createContext, useEffect } from 'react'
 
 export const UserContext = createContext()
+export const PollsContext = createContext()
 
 export function App(){ 
     const [state, dispatch] = useReducer(userReducer, { user: {}, myPolls: []})
-
+    const [pollsState, pollsDispatch] = useReducer(pollsReducer, { activePolls: []})
 
     useEffect(() => {
         if(localStorage.getItem('token')) { // handling page reload
@@ -39,25 +41,38 @@ export function App(){
                 }
             })()
         }
+
+        (async () => {
+            try {
+                const pollsResponse = await axios.get('/api/polls/active') 
+                const result = pollsResponse.data 
+                pollsDispatch({ type: 'SET_ACTIVE_POLLS', payload: result })
+            } catch(e) {
+                alert(e.message)
+            }
+        })()
+
     }, [])
     
     return (
         <BrowserRouter>
             <UserContext.Provider value={{state, dispatch }}>
-                <div>
-                    <h1>Polling App</h1>
-                    <NavBar /> 
+                <PollsContext.Provider value={{ pollsState, pollsDispatch}}>
+                    <div>
+                        <h1>Polling App</h1>
+                        <NavBar />
 
-                    <Routes>
-                        <Route path="/" element={<Home />}/> 
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path='/dashboard' element={<Dashboard />} />
-                        <Route path="/polls/new" element={<NewPoll />} />
-                        <Route path='/polls/my-polls' element={<MyPolls />} />
-                        <Route path="/mypolls/:id" element={<PollShow />}/>
-                    </Routes>
-                </div>
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path='/dashboard' element={<Dashboard />} />
+                            <Route path="/polls/new" element={<NewPoll />} />
+                            <Route path='/polls/my-polls' element={<MyPolls />} />
+                            <Route path="/mypolls/:id" element={<PollShow />} />
+                        </Routes>
+                    </div>
+                </PollsContext.Provider>
             </UserContext.Provider>
         </BrowserRouter>
     )
