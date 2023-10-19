@@ -11,6 +11,7 @@ import PollShow from'./components/PollShow'
 import userReducer from './reducers/user-reducer'
 import pollsReducer from './reducers/polls-reducer'
 import { useReducer, createContext, useEffect } from 'react'
+import SinglePoll from './components/SinglePoll'
 
 export const UserContext = createContext()
 export const PollsContext = createContext()
@@ -70,6 +71,7 @@ export function App(){
                             <Route path="/polls/new" element={<NewPoll />} />
                             <Route path='/polls/my-polls' element={<MyPolls />} />
                             <Route path="/mypolls/:id" element={<PollShow />} />
+                            <Route path="/polls/:id" element={<SinglePoll />} />
                         </Routes>
                     </div>
                 </PollsContext.Provider>
