@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import axios from '../config/axios'
 import { UserContext } from '../App'
 import { useState, useContext } from 'react'
@@ -67,6 +67,7 @@ function Login() {
                 </label> <br />
                 <input type="submit" />
             </form>
+            <b>New User? <Link to="/register">Sign up for free</Link></b>
         </div>
     )
 }
