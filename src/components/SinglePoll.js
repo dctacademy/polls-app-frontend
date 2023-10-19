@@ -6,13 +6,20 @@ import _ from 'lodash'
 import axios from '../config/axios'
 function SinglePoll(){ 
     const { id } = useParams() 
-    const { userState } = useContext(UserContext)
+    const { userState, userDispatch } = useContext(UserContext)
     const { pollsState} = useContext(PollsContext) 
     const poll = pollsState.activePolls.find((ele) => {
         return ele._id === id 
     })
-    const [selectedOption, setSelectedOption] = useState('')
+
+    const hasVoted = userState.myVotes.find((ele) => {
+        return ele.poll === id
+    })
+
+    const [selectedOption, setSelectedOption] = useState(hasVoted ? hasVoted.option : '')
     const [serverErrors, setServerErrors] = useState([])
+
+   
 
     const handleVote = async () => {
         try {
@@ -25,8 +32,22 @@ function SinglePoll(){
             })
             console.log(voteResponse.data)
             alert('thank you for voting')
+            userDispatch({ type: 'ADD_MY_VOTE', payload: voteResponse.data })
         } catch(e) {
             setServerErrors(e.response.data.errors)
+        }
+    }
+
+    // element variable 
+    const displayButton = () => {
+        if(_.isEmpty(userState.user)) {
+            return <Link to="/login"><button>Login to vote</button></Link>
+        } else {
+            if(hasVoted) {
+                return 'your vote is recorded'
+            } else {
+                return <button onClick={handleVote}>Vote</button>
+            }
         }
     }
 
@@ -64,7 +85,7 @@ function SinglePoll(){
                         })}
                     </ul>
 
-                    {_.isEmpty(userState.user) ? <Link to="/login"><button>Login to vote</button></Link> : <button onClick={handleVote}>Vote</button> }
+                    { displayButton() }
                     
                     
                     <p>created by {poll.creator.username} expiring on {new Date(poll.endDate).toDateString()} </p>

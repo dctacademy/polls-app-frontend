@@ -17,7 +17,8 @@ export const UserContext = createContext()
 export const PollsContext = createContext()
 
 export function App(){ 
-    const [userState, userDispatch] = useReducer(userReducer, { user: {}, myPolls: []})
+    const [userState, userDispatch] = useReducer(userReducer, { user: {}, myPolls: [], myVotes: []})
+    console.log('user state', userState)
     const [pollsState, pollsDispatch] = useReducer(pollsReducer, { activePolls: []})
 
     useEffect(() => {
@@ -37,6 +38,13 @@ export function App(){
                         }
                     })
                     userDispatch({ type: 'SET_MY_POLLS', payload: pollsResponse.data})
+
+                    const votesResponse = await axios.get('/api/votes/myvotes', {
+                        headers: {
+                            'Authorization': localStorage.getItem('token')
+                        }
+                    })
+                    userDispatch({ type: 'SET_MY_VOTES', payload: votesResponse.data })
                 } catch(e){
                     alert(e.message)
                 }

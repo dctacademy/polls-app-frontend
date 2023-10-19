@@ -36,6 +36,13 @@ function Login() {
                 }
             })
             userDispatch({ type: 'SET_MY_POLLS', payload: pollsResponse.data })
+
+            const votesResponse = await axios.get('/api/votes/myvotes', {
+                headers: {
+                    'Authorization' : localStorage.getItem('token')
+                }
+            })
+            userDispatch({ type: 'SET_MY_VOTES', payload: votesResponse.data })
             navigate('/dashboard')
         } catch(e) {
             setServerErrors(e.response.data.errors)
