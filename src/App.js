@@ -8,6 +8,8 @@ import NavBar from './components/NavBar'
 import NewPoll from './components/NewPoll'
 import MyPolls from './components/MyPolls'
 import PollShow from'./components/PollShow'
+import SingleCategory from './components/SingleCategory'
+
 import userReducer from './reducers/user-reducer'
 import pollsReducer from './reducers/polls-reducer'
 import categoriesReducer from './reducers/categories-reducer'
@@ -23,7 +25,7 @@ export function App(){
     const [userState, userDispatch] = useReducer(userReducer, { user: {}, myPolls: [], myVotes: []})
     console.log('user state', userState)
     const [pollsState, pollsDispatch] = useReducer(pollsReducer, { activePolls: []})
-    const [categoriesState, categoriesDispatch] = useReducer(categoriesReducer, { data: []})
+    const [categoriesState, categoriesDispatch] = useReducer(categoriesReducer, { data: [], selectedPolls: []})
 
     useEffect(() => {
         if(localStorage.getItem('token')) { // handling page reload
@@ -60,7 +62,6 @@ export function App(){
                 const responses = await Promise.all([await axios.get('/api/polls/active'), await axios.get('/api/categories')]) 
                 const polls = responses[0].data 
                 const categories = responses[1].data 
-                console.log('categories', categories)
                 pollsDispatch({ type: 'SET_ACTIVE_POLLS', payload: polls })
                 categoriesDispatch({ type: "SET_CATEGORIES", payload: categories })
             } catch(e) {
@@ -89,6 +90,7 @@ export function App(){
                                 <Route path='/polls/my-polls' element={<MyPolls />} />
                                 <Route path="/mypolls/:id" element={<PollShow />} />
                                 <Route path="/polls/:id" element={<SinglePoll />} />
+                                <Route path="/polls/category/:name" element={<SingleCategory />} /> 
                             </Routes>
                         </div>
                     </CategoriesContext.Provider>
