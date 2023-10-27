@@ -10,16 +10,20 @@ import MyPolls from './components/MyPolls'
 import PollShow from'./components/PollShow'
 import userReducer from './reducers/user-reducer'
 import pollsReducer from './reducers/polls-reducer'
+import categoriesReducer from './reducers/categories-reducer'
+
 import { useReducer, createContext, useEffect } from 'react'
 import SinglePoll from './components/SinglePoll'
 
 export const UserContext = createContext()
 export const PollsContext = createContext()
+export const CategoriesContext = createContext()
 
 export function App(){ 
     const [userState, userDispatch] = useReducer(userReducer, { user: {}, myPolls: [], myVotes: []})
     console.log('user state', userState)
     const [pollsState, pollsDispatch] = useReducer(pollsReducer, { activePolls: []})
+    const [categoriesState, categoriesDispatch] = useReducer(categoriesReducer, { data: []})
 
     useEffect(() => {
         if(localStorage.getItem('token')) { // handling page reload
@@ -53,9 +57,12 @@ export function App(){
 
         (async () => {
             try {
-                const pollsResponse = await axios.get('/api/polls/active') 
-                const result = pollsResponse.data 
-                pollsDispatch({ type: 'SET_ACTIVE_POLLS', payload: result })
+                const responses = await Promise.all([await axios.get('/api/polls/active'), await axios.get('/api/categories')]) 
+                const polls = responses[0].data 
+                const categories = responses[1].data 
+                console.log('categories', categories)
+                pollsDispatch({ type: 'SET_ACTIVE_POLLS', payload: polls })
+                categoriesDispatch({ type: "SET_CATEGORIES", payload: categories })
             } catch(e) {
                 alert(e.message)
             }
@@ -67,21 +74,24 @@ export function App(){
         <BrowserRouter>
             <UserContext.Provider value={{userState, userDispatch }}>
                 <PollsContext.Provider value={{ pollsState, pollsDispatch}}>
-                    <div>
-                        <h1>Polling App</h1>
-                        <NavBar />
+                    <CategoriesContext.Provider value={{ categoriesState, categoriesDispatch}}>
+                        <div>
+                            <h1>Polling App</h1>
+                            <h2>Total Catgories - { categoriesState.data.length } </h2>
+                            <NavBar />
 
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path='/dashboard' element={<Dashboard />} />
-                            <Route path="/polls/new" element={<NewPoll />} />
-                            <Route path='/polls/my-polls' element={<MyPolls />} />
-                            <Route path="/mypolls/:id" element={<PollShow />} />
-                            <Route path="/polls/:id" element={<SinglePoll />} />
-                        </Routes>
-                    </div>
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/register" element={<Register />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path='/dashboard' element={<Dashboard />} />
+                                <Route path="/polls/new" element={<NewPoll />} />
+                                <Route path='/polls/my-polls' element={<MyPolls />} />
+                                <Route path="/mypolls/:id" element={<PollShow />} />
+                                <Route path="/polls/:id" element={<SinglePoll />} />
+                            </Routes>
+                        </div>
+                    </CategoriesContext.Provider>
                 </PollsContext.Provider>
             </UserContext.Provider>
         </BrowserRouter>
